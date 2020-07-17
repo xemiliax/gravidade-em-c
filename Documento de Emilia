@@ -1,0 +1,97 @@
+#include<stdio.h>
+#include<math.h>
+#include <locale.h>
+
+#define gravidade 9.81 // Declaramos a gravidade com constante já que nunca mudará no código
+
+//protótipos das funçoes utilizadas no código
+float calcAlturaMax(float, float);
+float calcTempTraj(float, float);
+float calcAlcanceH(float, float);
+
+int main(){
+    //setando a lingua do código como português
+    setlocale(LC_ALL,"Portuguese");
+
+    //Declaração de variáveis
+    float angulo, velocidade, deltaX, deltaY, deltaT, dAlvo, tAlvo;
+
+    //RA's dos alunos
+    printf("\nGuilherme Mendes de Oliveira, 21332639");
+    printf("\nPaulo Joaquim da Silva Junior, 21335341");
+    printf("\nIngrid Emília Silva Souza, 21335025");
+    printf("\nGabriel Henrique Cardoso Cesarino, 21226132");
+    printf("\nTalita de Oliveira Alves, 21339497\n");
+
+    //Explicação do algoritmo
+    printf("\nEste algoritmo calcula a trajetória de um projétil a partir da inclinação\ne velocidade de lançamento, além disso, verifica se este projétil será\ncapaz de atingir determinado alvo.\n");
+
+    //Pedindo os valores iniciais ao usuário
+    //Cada laço do-while é responsável por uma entrada de dados do usuário. Eles foram utilizados para
+    //certificar que os dados inseridos são válidos.
+    do{
+        printf("\nDigite um ângulo de inclinação entre 0 e 90 graus: ");
+        scanf("%f", &angulo);
+        if(angulo>=90.0 || angulo<=0.0){
+            printf("Valor inválido.");
+        }
+    }while(angulo>=90.0 || angulo<=0.0);
+    do{
+        printf("\nDigite uma velocidade positiva em m/s: ");
+        scanf("%f", &velocidade);
+        if(velocidade<=0){
+            printf("Valor inválido.");
+        }
+    }while(velocidade<=0);
+
+    //Cálculos
+    //Utilizamos o auxilio de funções para simplificar o código. Poderiamos também ter unificado essas três
+    //funções em uma só já que todas utilizam os mesmos argumentos, porem a propósito de clareza optamos por dividi-las.
+    deltaX= calcAlcanceH(velocidade, angulo);
+    deltaY= calcAlturaMax(velocidade, angulo);
+    deltaT= calcTempTraj(velocidade, angulo);
+
+    //Pedindo ao usuário as informações relacionadas ao alvo.
+    //Aqui novamente utilizamos laços do-while para certificar que os dados inseridos pelo usuário são válidos.
+    do{
+        printf("\nDigite uma distância positiva do alvo em relação ao canhão em metros: ");
+        scanf("%f", &dAlvo);
+        if(dAlvo<=0){
+            printf("Valor inválido.");
+        }
+    }while(dAlvo<=0);
+    do{
+        printf("\nDigite o tamanho do alvo (deve estar entre 20 e 50 metros): ");
+        scanf("%f", &tAlvo);
+        if(tAlvo<20 || tAlvo>50){
+            printf("Valor inválido.");
+        }
+    }while(tAlvo<20 || tAlvo>50);
+
+    //Os seguintes if's são responsáveis por verificar se o alvo foi atingido ou não e, então imprimir o resultado.
+    if(deltaX>tAlvo+dAlvo){
+        printf("\nA bala de canhão caiu depois do alvo.");
+    }else if(deltaX<dAlvo){
+        printf("\nA bala de canhão caiu antes do alvo.");
+    }else{
+        printf("\nA bala acertou o alvo");
+    }
+
+    //Nas seguintes linhas, imprimimos os resultados relacionados a bala de canhão (altura, alcance e tempo).
+    printf("\nO alcance horizontal foi: %.2f metros.", deltaX);
+    printf("\nA altura máxima foi: %.2f metros.", deltaY);
+    printf("\nO tempo de trajeto foi: %.2f segundos.", deltaT);
+return 0;
+}
+
+//Difinição das funções utilizadas no código.
+float calcAlturaMax(float velInicial, float ang){
+    return ((velInicial*velInicial)*(sin(ang*M_PI/180)*sin(ang*M_PI/180))/(2*gravidade));
+}
+float calcTempTraj(float velInicial, float ang){
+    return ((2*velInicial*sin(ang*M_PI/180))/gravidade);
+}
+float calcAlcanceH(float velInicial, float ang){
+    return (((cos(ang*M_PI/180)*sin(ang*M_PI/180))/gravidade)*2*velInicial*velInicial);
+}
+
